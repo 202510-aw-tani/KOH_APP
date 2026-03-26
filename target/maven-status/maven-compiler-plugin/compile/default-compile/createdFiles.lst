@@ -1,0 +1,6 @@
+com\example\koh\KohApplication.class
+com\example\koh\repository\ReservationRepository.class
+com\example\koh\controller\ReservationController.class
+com\example\koh\form\ReservationForm.class
+com\example\koh\service\ReservationService.class
+com\example\koh\entity\Reservation.class
