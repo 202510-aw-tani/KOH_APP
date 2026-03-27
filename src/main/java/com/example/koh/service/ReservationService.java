@@ -6,6 +6,8 @@ import com.example.koh.repository.ReservationRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class ReservationService {
 
@@ -26,5 +28,10 @@ public class ReservationService {
         reservation.setPhone(form.getPhone());
         reservation.setNote(form.getNote());
         return reservationRepository.save(reservation);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Reservation> findAllReservations() {
+        return reservationRepository.findAllByOrderByCreatedAtDescIdDesc();
     }
 }

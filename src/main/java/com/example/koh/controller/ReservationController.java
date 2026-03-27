@@ -3,9 +3,13 @@ package com.example.koh.controller;
 import com.example.koh.form.ReservationForm;
 import com.example.koh.service.ReservationService;
 import jakarta.validation.Valid;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -21,6 +25,11 @@ public class ReservationController {
     @ModelAttribute("reservationForm")
     public ReservationForm reservationForm() {
         return new ReservationForm();
+    }
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
     }
 
     @GetMapping("/")
@@ -45,11 +54,17 @@ public class ReservationController {
             return "reserve";
         }
         reservationService.createReservation(reservationForm);
-        return "redirect:/thanks";
+        return "redirect:/reservations";
     }
 
     @GetMapping("/thanks")
     public String thanks() {
         return "thanks";
+    }
+
+    @GetMapping("/reservations")
+    public String reservations(Model model) {
+        model.addAttribute("reservations", reservationService.findAllReservations());
+        return "reservations";
     }
 }

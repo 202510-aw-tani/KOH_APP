@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -15,6 +16,7 @@ public class ReservationForm {
     private LocalDate reservationDate;
 
     @NotBlank(message = "時間枠を選択してください。")
+    @Pattern(regexp = "11|13|15", message = "時間枠の値が不正です。")
     private String reservationTime;
 
     @NotNull(message = "人数を選択してください。")

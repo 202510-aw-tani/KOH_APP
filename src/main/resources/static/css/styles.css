@@ -312,6 +312,22 @@ a:hover {
   color: #b00020;
   font-size: 14px;
   font-weight: 600;
+  background: #fff3f5;
+  border: 1px solid #f3c5cc;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.reserve-form__error-summary p {
+  margin: 0;
+}
+
+.reserve-form__error-list {
+  margin: 6px 0 0 1.2em;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.6;
 }
 
 .reserve-field__error {
@@ -587,6 +603,37 @@ h2 {
 .thanks-sub-link {
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+.reservation-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.reservation-table {
+  width: 100%;
+  min-width: 700px;
+  border-collapse: collapse;
+  border: 1px solid var(--color-border);
+  background: var(--color-white);
+}
+
+.reservation-table th,
+.reservation-table td {
+  border: 1px solid var(--color-border);
+  padding: 8px 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: left;
+  vertical-align: top;
+}
+
+.reservation-table th {
+  background: var(--color-sub);
+}
+
+.reservation-table__empty {
+  text-align: center;
 }
 
 .faq-teaser {

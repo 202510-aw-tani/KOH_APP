@@ -31,7 +31,12 @@
       <p class="reserve-lead">ご希望内容をご入力ください。送信後、完了ページへ移動します。</p>
 
       <form class="reserve-form" th:action="@{/reserve}" th:object="${reservationForm}" method="post">
-        <p class="reserve-form__error-summary" th:if="${#fields.hasAnyErrors()}">入力内容をご確認ください。</p>
+        <div class="reserve-form__error-summary" th:if="${#fields.hasAnyErrors()}">
+          <p>入力内容をご確認ください。</p>
+          <ul class="reserve-form__error-list">
+            <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+          </ul>
+        </div>
         <div class="reserve-field">
           <label for="reservation_date">予約希望日</label>
           <select id="reservation_date" th:field="*{reservationDate}" required>
