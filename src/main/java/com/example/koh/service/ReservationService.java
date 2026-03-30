@@ -6,6 +6,7 @@ import com.example.koh.repository.ReservationRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -33,5 +34,11 @@ public class ReservationService {
     @Transactional(readOnly = true)
     public List<Reservation> findAllReservations() {
         return reservationRepository.findAllByOrderByCreatedAtDescIdDesc();
+    }
+
+    @Transactional(readOnly = true)
+    public int sumPartySizeBySlot(LocalDate reservationDate, String reservationTime) {
+        Integer total = reservationRepository.sumPartySizeByReservationDateAndReservationTime(reservationDate, reservationTime);
+        return total != null ? total : 0;
     }
 }

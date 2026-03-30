@@ -29,7 +29,7 @@ class ReservationFlowTest {
     private ReservationRepository reservationRepository;
 
     @Test
-    void postReserveSavesDbAndListPageShowsSavedData() throws Exception {
+    void postReserveSavesDbAndReservationsUrlRedirectsToThanks() throws Exception {
         long beforeCount = reservationRepository.count();
 
         mockMvc.perform(post("/reserve")
@@ -52,13 +52,12 @@ class ReservationFlowTest {
                 .contains("flow-test@example.com");
 
         mockMvc.perform(get("/reservations"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("ID")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("flow-test@example.com")));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/thanks"));
     }
 
     @Test
-    void reservationsListShowsNewestFirst() throws Exception {
+    void reservationsUrlDirectAccessRedirectsToThanks() throws Exception {
         mockMvc.perform(post("/reserve")
                         .param("reservationDate", "2026-04-05")
                         .param("reservationTime", "11")
@@ -74,20 +73,12 @@ class ReservationFlowTest {
                         .param("partySize", "2")
                         .param("name", "Newer User")
                         .param("email", "newer@example.com")
-                        .param("phone", "09000000002"))
+                .param("phone", "09000000002"))
                 .andExpect(status().is3xxRedirection());
 
-        String html = mockMvc.perform(get("/reservations"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
-
-        int newerIndex = html.indexOf("newer@example.com");
-        int olderIndex = html.indexOf("older@example.com");
-        assertThat(newerIndex).isGreaterThan(-1);
-        assertThat(olderIndex).isGreaterThan(-1);
-        assertThat(newerIndex).isLessThan(olderIndex);
+        mockMvc.perform(get("/reservations"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/thanks"));
     }
 
     @Test
@@ -109,5 +100,65 @@ class ReservationFlowTest {
 
         long afterCount = reservationRepository.count();
         assertThat(afterCount).isEqualTo(beforeCount);
+    }
+
+    @Test
+    void postReserveWhenExistingEightAndNewTwoAllowsSave() throws Exception {
+        long beforeCount = reservationRepository.count();
+
+        mockMvc.perform(post("/reserve")
+                        .param("reservationDate", "2026-05-02")
+                        .param("reservationTime", "11")
+                        .param("partySize", "8")
+                        .param("name", "Eight User")
+                        .param("email", "eight@example.com")
+                        .param("phone", "09033334444"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/thanks"));
+
+        mockMvc.perform(post("/reserve")
+                        .param("reservationDate", "2026-05-02")
+                        .param("reservationTime", "11")
+                        .param("partySize", "2")
+                        .param("name", "Two User")
+                        .param("email", "two@example.com")
+                        .param("phone", "09055556666"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/thanks"));
+
+        long afterCount = reservationRepository.count();
+        assertThat(afterCount).isEqualTo(beforeCount + 2);
+    }
+
+    @Test
+    void postReserveWhenExistingEightAndNewThreeRejectsWithoutSaving() throws Exception {
+        long beforeCount = reservationRepository.count();
+
+        mockMvc.perform(post("/reserve")
+                        .param("reservationDate", "2026-05-03")
+                        .param("reservationTime", "13")
+                        .param("partySize", "8")
+                        .param("name", "Existing Eight User")
+                        .param("email", "existing-eight@example.com")
+                        .param("phone", "09077778888"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/thanks"));
+
+        long afterFirstSaveCount = reservationRepository.count();
+        assertThat(afterFirstSaveCount).isEqualTo(beforeCount + 1);
+
+        mockMvc.perform(post("/reserve")
+                        .param("reservationDate", "2026-05-03")
+                        .param("reservationTime", "13")
+                        .param("partySize", "3")
+                        .param("name", "Overflow User")
+                        .param("email", "overflow@example.com")
+                        .param("phone", "09099990000"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("reserve"))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("定員10名")));
+
+        long afterSecondPostCount = reservationRepository.count();
+        assertThat(afterSecondPostCount).isEqualTo(afterFirstSaveCount);
     }
 }

@@ -5,7 +5,6 @@ import com.example.koh.service.ReservationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,6 +52,15 @@ public class ReservationController {
         if (bindingResult.hasErrors()) {
             return "reserve";
         }
+        int reservedPartySize = reservationService.sumPartySizeBySlot(
+                reservationForm.getReservationDate(),
+                reservationForm.getReservationTime()
+        );
+        if (reservedPartySize + reservationForm.getPartySize() > 10) {
+            bindingResult.rejectValue("partySize", "capacity.exceeded",
+                    "この時間枠は定員10名を超えるため予約できません。人数を変更してください。");
+            return "reserve";
+        }
         reservationService.createReservation(reservationForm);
         return "redirect:/thanks";
     }
@@ -63,8 +71,7 @@ public class ReservationController {
     }
 
     @GetMapping("/reservations")
-    public String reservations(Model model) {
-        model.addAttribute("reservations", reservationService.findAllReservations());
-        return "reservations";
+    public String reservations() {
+        return "redirect:/thanks";
     }
 }
