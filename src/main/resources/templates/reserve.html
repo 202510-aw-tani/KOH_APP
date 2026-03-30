@@ -28,7 +28,7 @@
   <main class="reserve-main">
     <section class="reserve-section container">
       <h1 class="reserve-title">予約フォーム</h1>
-      <p class="reserve-lead">ご希望内容をご入力ください。送信後、完了ページへ移動します。</p>
+      <p class="reserve-lead">ご希望内容をご入力ください。送信後、送信完了ページへ移動します。</p>
 
       <form class="reserve-form" th:action="@{/reserve}" th:object="${reservationForm}" method="post">
         <div class="reserve-form__error-summary" th:if="${#fields.hasAnyErrors()}">

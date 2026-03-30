@@ -54,7 +54,7 @@ public class ReservationController {
             return "reserve";
         }
         reservationService.createReservation(reservationForm);
-        return "redirect:/reservations";
+        return "redirect:/thanks";
     }
 
     @GetMapping("/thanks")
