@@ -13,7 +13,7 @@ import java.util.List;
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     List<Reservation> findAllByOrderByCreatedAtDescIdDesc();
 
-    @Query("select coalesce(sum(r.partySize), 0) from Reservation r where r.reservationDate = :reservationDate and r.reservationTime = :reservationTime")
+    @Query("select coalesce(sum(r.partySize), 0) from Reservation r where r.reservationDate = :reservationDate and trim(function('replace', r.reservationTime, ':00', '')) = :reservationTime")
     Integer sumPartySizeByReservationDateAndReservationTime(@Param("reservationDate") LocalDate reservationDate,
                                                             @Param("reservationTime") String reservationTime);
 }

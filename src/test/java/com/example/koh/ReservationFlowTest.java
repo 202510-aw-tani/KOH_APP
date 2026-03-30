@@ -161,4 +161,64 @@ class ReservationFlowTest {
         long afterSecondPostCount = reservationRepository.count();
         assertThat(afterSecondPostCount).isEqualTo(afterFirstSaveCount);
     }
+
+    @Test
+    void postReserveAlsoCountsLegacyTimeFormatWithColon() throws Exception {
+        long beforeCount = reservationRepository.count();
+
+        Reservation legacyReservation = new Reservation();
+        legacyReservation.setReservationDate(java.time.LocalDate.of(2026, 5, 4));
+        legacyReservation.setReservationTime("11:00");
+        legacyReservation.setPartySize(8);
+        legacyReservation.setName("Legacy Time User");
+        legacyReservation.setEmail("legacy-time@example.com");
+        legacyReservation.setPhone("09012121212");
+        reservationRepository.save(legacyReservation);
+
+        long afterLegacySaveCount = reservationRepository.count();
+        assertThat(afterLegacySaveCount).isEqualTo(beforeCount + 1);
+
+        mockMvc.perform(post("/reserve")
+                        .param("reservationDate", "2026-05-04")
+                        .param("reservationTime", "11")
+                        .param("partySize", "3")
+                        .param("name", "New User")
+                        .param("email", "new-user@example.com")
+                        .param("phone", "09034343434"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("reserve"));
+
+        long afterSecondPostCount = reservationRepository.count();
+        assertThat(afterSecondPostCount).isEqualTo(afterLegacySaveCount);
+    }
+
+    @Test
+    void postReserveAlsoCountsPaddedTimeValue() throws Exception {
+        long beforeCount = reservationRepository.count();
+
+        Reservation paddedReservation = new Reservation();
+        paddedReservation.setReservationDate(java.time.LocalDate.of(2026, 4, 5));
+        paddedReservation.setReservationTime("11   ");
+        paddedReservation.setPartySize(45);
+        paddedReservation.setName("Padded Time User");
+        paddedReservation.setEmail("padded-time@example.com");
+        paddedReservation.setPhone("09056565656");
+        reservationRepository.save(paddedReservation);
+
+        long afterPaddedSaveCount = reservationRepository.count();
+        assertThat(afterPaddedSaveCount).isEqualTo(beforeCount + 1);
+
+        mockMvc.perform(post("/reserve")
+                        .param("reservationDate", "2026-04-05")
+                        .param("reservationTime", "11")
+                        .param("partySize", "1")
+                        .param("name", "Another User")
+                        .param("email", "another@example.com")
+                        .param("phone", "09078787878"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("reserve"));
+
+        long afterSecondPostCount = reservationRepository.count();
+        assertThat(afterSecondPostCount).isEqualTo(afterPaddedSaveCount);
+    }
 }
