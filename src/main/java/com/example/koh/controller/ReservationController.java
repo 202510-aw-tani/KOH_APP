@@ -1,4 +1,4 @@
-package com.example.koh.controller;
+﻿package com.example.koh.controller;
 
 import com.example.koh.form.ReservationForm;
 import com.example.koh.service.ReservationService;
@@ -57,7 +57,7 @@ public class ReservationController {
                 reservationForm.getReservationTime());
         if (reservedPartySize + reservationForm.getPartySize() > 10) {
             bindingResult.rejectValue("partySize", "capacity.exceeded",
-                    "この時間枠は定員10名を超えるため予約できません。人数を変更してください。");
+                    "この時間枠は定員10名を超えるため予約できません。人数を調整してください。");
             return "reserve";
         }
         reservationService.createReservation(reservationForm);
@@ -74,3 +74,5 @@ public class ReservationController {
         return "redirect:/thanks";
     }
 }
+
+

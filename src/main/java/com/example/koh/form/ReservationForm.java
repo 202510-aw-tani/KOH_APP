@@ -1,10 +1,11 @@
-package com.example.koh.form;
+﻿package com.example.koh.form;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -24,15 +25,20 @@ public class ReservationForm {
     private Integer partySize;
 
     @NotBlank(message = "名前を入力してください。")
+    @Size(max = 50, message = "名前は50文字以内で入力してください。")
     private String name;
 
     @NotBlank(message = "メールアドレスを入力してください。")
+    @Size(max = 200, message = "メールアドレスは200文字以内で入力してください。")
     @Email(message = "メールアドレスの形式が正しくありません。")
     private String email;
 
     @NotBlank(message = "電話番号を入力してください。")
+    @Size(min = 10, max = 13, message = "電話番号は10桁から13文字で入力してください。")
+    @Pattern(regexp = "^(?:\\d{10,11}|0\\d{1,4}-\\d{1,4}-\\d{4})$", message = "電話番号は半角数字とハイフンで正しい形式で入力してください。")
     private String phone;
 
+    @Size(max = 300, message = "備考は300文字以内で入力してください。")
     private String note;
 
     public LocalDate getReservationDate() {
