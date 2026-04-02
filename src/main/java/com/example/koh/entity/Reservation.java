@@ -29,16 +29,16 @@ public class Reservation {
     @Column(name = "party_size", nullable = false)
     private Integer partySize;
 
-    @Column(name = "name", nullable = false, length = 100)
+    @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @Column(name = "email", nullable = false, length = 255)
+    @Column(name = "email", nullable = false, length = 200)
     private String email;
 
-    @Column(name = "phone", nullable = false, length = 20)
+    @Column(name = "phone", nullable = false, length = 13)
     private String phone;
 
-    @Column(name = "note", columnDefinition = "TEXT")
+    @Column(name = "note", length = 300)
     private String note;
 
     @Column(name = "created_at", nullable = false)

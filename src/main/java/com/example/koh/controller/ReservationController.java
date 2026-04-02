@@ -52,15 +52,11 @@ public class ReservationController {
         if (bindingResult.hasErrors()) {
             return "reserve";
         }
-        int reservedPartySize = reservationService.sumPartySizeBySlot(
-                reservationForm.getReservationDate(),
-                reservationForm.getReservationTime());
-        if (reservedPartySize + reservationForm.getPartySize() > 10) {
+        if (!reservationService.reserveIfCapacityAvailable(reservationForm)) {
             bindingResult.rejectValue("partySize", "capacity.exceeded",
                     "この時間枠は定員10名を超えるため予約できません。人数を調整してください。");
             return "reserve";
         }
-        reservationService.createReservation(reservationForm);
         return "redirect:/thanks";
     }
 
