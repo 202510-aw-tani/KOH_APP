@@ -7,12 +7,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
-    List<Reservation> findAllByOrderByCreatedAtDescIdDesc();
-
     @Query("select coalesce(sum(r.partySize), 0) from Reservation r where r.reservationDate = :reservationDate and trim(function('replace', r.reservationTime, ':00', '')) = :reservationTime")
     Integer sumPartySizeByReservationDateAndReservationTime(@Param("reservationDate") LocalDate reservationDate,
                                                             @Param("reservationTime") String reservationTime);

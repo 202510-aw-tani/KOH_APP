@@ -1,4 +1,4 @@
-﻿package com.example.koh.controller;
+package com.example.koh.controller;
 
 import com.example.koh.form.ReservationForm;
 import com.example.koh.service.ReservationService;
@@ -73,6 +73,5 @@ public class ReservationController {
     public String reservations() {
         return "redirect:/thanks";
     }
+
 }
-
-
