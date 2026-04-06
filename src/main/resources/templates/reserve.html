@@ -4,23 +4,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>KOH | 予約フォーム</title>
+  <title>KOH | 予約フォーム入力</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Inria+Serif:wght@300;400;700&family=Noto+Sans+JP:wght@400;500;600;700&family=Noto+Serif+JP:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" th:href="@{/css/styles.css}" href="/css/styles.css">
+  <link rel="stylesheet" href="./styles.css">
 </head>
 
 <body class="reserve-page">
   <header class="site-header">
     <div class="site-header__inner">
-      <a class="logo" th:href="@{/}" href="/" aria-label="KOH ホーム">
-        <img class="logo__image" th:src="@{/assets/images/common/koh-logo-new.png}" src="/assets/images/common/koh-logo-new.png" alt="KOH">
+      <a class="logo" href="/" th:href="@{/}" aria-label="KOH ホーム">
+        <img class="logo__image" src="assets/images/common/koh-logo-new.png" alt="KOH">
       </a>
       <nav class="site-header__nav" aria-label="グローバルナビゲーション">
-        <a class="nav-link" th:href="@{/faq}" href="/faq">FAQ（よくあるご質問）</a>
-        <a class="nav-link nav-link--cta" th:href="@{/}" href="/">TOPへ戻る</a>
+        <a class="nav-link" href="/faq" th:href="@{/faq}">FAQ（よくあるご質問）</a>
+        <a class="nav-link nav-link--cta" href="/" th:href="@{/}">TOPへ戻る</a>
       </nav>
     </div>
   </header>
@@ -28,18 +28,17 @@
   <main class="reserve-main">
     <section class="reserve-section container">
       <h1 class="reserve-title">予約フォーム</h1>
-      <p class="reserve-lead">ご希望内容をご入力ください。送信後、送信完了ページへ移動します。</p>
+      <p class="reserve-lead">予約フォームに必要事項をご入力ください。送信後、予約受付完了画面を表示します。</p>
 
-      <form class="reserve-form" th:action="@{/reserve}" th:object="${reservationForm}" method="post">
-        <div class="reserve-form__error-summary" th:if="${#fields.hasAnyErrors()}">
-          <p>入力内容をご確認ください。</p>
-          <ul class="reserve-form__error-list">
-            <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
-          </ul>
+      <form class="reserve-form" action="/reserve" method="post" th:action="@{/reserve}" th:object="${reservationForm}">
+        <div class="reserve-error-summary" hidden th:if="${#fields.hasAnyErrors()}" th:remove="attr:hidden" role="alert" aria-live="polite">
+          <p class="reserve-error-summary__title">入力内容をご確認ください。</p>
+          <p class="reserve-error-summary__text">未入力または入力形式に誤りがあります。</p>
         </div>
+
         <div class="reserve-field">
-          <label for="reservation_date">予約希望日</label>
-          <select id="reservation_date" th:field="*{reservationDate}" required>
+          <label for="reservationDate">予約希望日（必須）</label>
+          <select id="reservationDate" name="reservationDate" th:field="*{reservationDate}" required>
             <option value="">選択してください</option>
             <option value="2026-04-05">4月5日（土）</option>
             <option value="2026-04-06">4月6日（日）</option>
@@ -55,23 +54,23 @@
             <option value="2026-06-06">6月6日（土）</option>
             <option value="2026-06-07">6月7日（日）</option>
           </select>
-          <p class="reserve-field__error" th:if="${#fields.hasErrors('reservationDate')}" th:errors="*{reservationDate}"></p>
+          <p class="reserve-error" hidden th:if="${#fields.hasErrors('reservationDate')}" th:remove="attr:hidden" th:errors="*{reservationDate}"></p>
         </div>
 
         <div class="reserve-field">
-          <label for="reservation_time">時間枠</label>
-          <select id="reservation_time" th:field="*{reservationTime}" required>
+          <label for="reservationTime">時間枠（必須）</label>
+          <select id="reservationTime" name="reservationTime" th:field="*{reservationTime}" required>
             <option value="">選択してください</option>
             <option value="11">11:00</option>
             <option value="13">13:00</option>
             <option value="15">15:00</option>
           </select>
-          <p class="reserve-field__error" th:if="${#fields.hasErrors('reservationTime')}" th:errors="*{reservationTime}"></p>
+          <p class="reserve-error" hidden th:if="${#fields.hasErrors('reservationTime')}" th:remove="attr:hidden" th:errors="*{reservationTime}"></p>
         </div>
 
         <div class="reserve-field">
-          <label for="party_size">人数</label>
-          <select id="party_size" th:field="*{partySize}" required>
+          <label for="partySize">人数（必須）</label>
+          <select id="partySize" name="partySize" th:field="*{partySize}" required>
             <option value="">選択してください</option>
             <option value="1">1名</option>
             <option value="2">2名</option>
@@ -84,35 +83,35 @@
             <option value="9">9名</option>
             <option value="10">10名</option>
           </select>
-          <p class="reserve-field__error" th:if="${#fields.hasErrors('partySize')}" th:errors="*{partySize}"></p>
+          <p class="reserve-error" hidden th:if="${#fields.hasErrors('partySize')}" th:remove="attr:hidden" th:errors="*{partySize}"></p>
         </div>
 
         <div class="reserve-field">
-          <label for="name">名前</label>
-          <input id="name" th:field="*{name}" type="text" autocomplete="name" required>
-          <p class="reserve-field__error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+          <label for="name">名前（必須）</label>
+          <input id="name" name="name" type="text" autocomplete="name" th:field="*{name}" required>
+          <p class="reserve-error" hidden th:if="${#fields.hasErrors('name')}" th:remove="attr:hidden" th:errors="*{name}"></p>
         </div>
 
         <div class="reserve-field">
-          <label for="email">メールアドレス</label>
-          <input id="email" th:field="*{email}" type="email" autocomplete="email" required>
-          <p class="reserve-field__error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+          <label for="email">メールアドレス（必須）</label>
+          <input id="email" name="email" type="email" autocomplete="email" th:field="*{email}" required>
+          <p class="reserve-error" hidden th:if="${#fields.hasErrors('email')}" th:remove="attr:hidden" th:errors="*{email}"></p>
         </div>
 
         <div class="reserve-field">
-          <label for="phone">電話番号</label>
-          <input id="phone" th:field="*{phone}" type="tel" autocomplete="tel" required>
-          <p class="reserve-field__error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></p>
+          <label for="phone">電話番号（必須）</label>
+          <input id="phone" name="phone" type="tel" autocomplete="tel" th:field="*{phone}" required>
+          <p class="reserve-error" hidden th:if="${#fields.hasErrors('phone')}" th:remove="attr:hidden" th:errors="*{phone}"></p>
         </div>
 
         <div class="reserve-field">
-          <label for="note">備考欄</label>
-          <textarea id="note" th:field="*{note}" rows="4"></textarea>
+          <label for="note">備考欄（任意）</label>
+          <textarea id="note" name="note" rows="4" th:field="*{note}"></textarea>
         </div>
 
         <div class="reserve-actions">
-          <button class="btn btn--primary" type="submit">予約内容を送信する</button>
-          <a class="reserve-back-link" th:href="@{/faq}" href="/faq">FAQを確認する</a>
+          <button class="btn btn--primary" type="submit">予約を送信して受付完了へ進む</button>
+          <a class="reserve-back-link" href="/faq" th:href="@{/faq}">FAQを確認する</a>
         </div>
       </form>
     </section>
@@ -120,12 +119,12 @@
 
   <footer class="site-footer">
     <div class="site-footer__inner">
-      <a class="logo" th:href="@{/}" href="/" aria-label="KOH ホーム">
-        <img class="logo__image" th:src="@{/assets/images/common/koh-logo-new.png}" src="/assets/images/common/koh-logo-new.png" alt="KOH">
+      <a class="logo" href="/" th:href="@{/}" aria-label="KOH ホーム">
+        <img class="logo__image" src="assets/images/common/koh-logo-new.png" alt="KOH">
       </a>
       <nav class="site-footer__nav" aria-label="フッターナビゲーション">
-        <a class="nav-link" th:href="@{/faq}" href="/faq">FAQ（よくあるご質問）</a>
-        <a class="nav-link nav-link--cta" th:href="@{/reserve}" href="/reserve">ご予約はこちら</a>
+        <a class="nav-link" href="/faq" th:href="@{/faq}">FAQ（よくあるご質問）</a>
+        <a class="nav-link nav-link--cta" href="/" th:href="@{/}">TOPへ戻る</a>
       </nav>
       <small class="site-footer__copyright">©KOH</small>
     </div>
@@ -133,4 +132,3 @@
 </body>
 
 </html>
-
