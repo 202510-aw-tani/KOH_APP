@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Inria+Serif:wght@300;400;700&family=Noto+Sans+JP:wght@400;500;600;700&family=Noto+Serif+JP:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" th:href="@{/css/styles.css}" href="/css/styles.css">
 </head>
 
 <body class="reserve-page">
@@ -31,7 +31,7 @@
       <p class="reserve-lead">予約フォームに必要事項をご入力ください。送信後、予約受付完了画面を表示します。</p>
 
       <form class="reserve-form" action="/reserve" method="post" th:action="@{/reserve}" th:object="${reservationForm}">
-        <div class="reserve-error-summary" hidden th:if="${#fields.hasAnyErrors()}" th:remove="attr:hidden" role="alert" aria-live="polite">
+        <div class="reserve-error-summary" th:if="${#fields.hasAnyErrors()}" role="alert" aria-live="polite">
           <p class="reserve-error-summary__title">入力内容をご確認ください。</p>
           <p class="reserve-error-summary__text">未入力または入力形式に誤りがあります。</p>
         </div>
@@ -54,7 +54,7 @@
             <option value="2026-06-06">6月6日（土）</option>
             <option value="2026-06-07">6月7日（日）</option>
           </select>
-          <p class="reserve-error" hidden th:if="${#fields.hasErrors('reservationDate')}" th:remove="attr:hidden" th:errors="*{reservationDate}"></p>
+          <p class="reserve-error" th:if="${#fields.hasErrors('reservationDate')}" th:errors="*{reservationDate}"></p>
         </div>
 
         <div class="reserve-field">
@@ -65,7 +65,7 @@
             <option value="13">13:00</option>
             <option value="15">15:00</option>
           </select>
-          <p class="reserve-error" hidden th:if="${#fields.hasErrors('reservationTime')}" th:remove="attr:hidden" th:errors="*{reservationTime}"></p>
+          <p class="reserve-error" th:if="${#fields.hasErrors('reservationTime')}" th:errors="*{reservationTime}"></p>
         </div>
 
         <div class="reserve-field">
@@ -83,25 +83,25 @@
             <option value="9">9名</option>
             <option value="10">10名</option>
           </select>
-          <p class="reserve-error" hidden th:if="${#fields.hasErrors('partySize')}" th:remove="attr:hidden" th:errors="*{partySize}"></p>
+          <p class="reserve-error" th:if="${#fields.hasErrors('partySize')}" th:errors="*{partySize}"></p>
         </div>
 
         <div class="reserve-field">
           <label for="name">名前（必須）</label>
           <input id="name" name="name" type="text" autocomplete="name" th:field="*{name}" required>
-          <p class="reserve-error" hidden th:if="${#fields.hasErrors('name')}" th:remove="attr:hidden" th:errors="*{name}"></p>
+          <p class="reserve-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
         </div>
 
         <div class="reserve-field">
           <label for="email">メールアドレス（必須）</label>
           <input id="email" name="email" type="email" autocomplete="email" th:field="*{email}" required>
-          <p class="reserve-error" hidden th:if="${#fields.hasErrors('email')}" th:remove="attr:hidden" th:errors="*{email}"></p>
+          <p class="reserve-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
         </div>
 
         <div class="reserve-field">
           <label for="phone">電話番号（必須）</label>
           <input id="phone" name="phone" type="tel" autocomplete="tel" th:field="*{phone}" required>
-          <p class="reserve-error" hidden th:if="${#fields.hasErrors('phone')}" th:remove="attr:hidden" th:errors="*{phone}"></p>
+          <p class="reserve-error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></p>
         </div>
 
         <div class="reserve-field">
